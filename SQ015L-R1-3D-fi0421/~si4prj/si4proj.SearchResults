@@ -1,0 +1,7 @@
+---- u8BeepXms Matches (6 in 2 files) ----
+RenewStateTriggleFlag in logic.c (OTL-PowerCtrl-fh1229) : 		if(u8BeepXms==0)
+CheckStateTriggleFlag in logic.c (OTL-PowerCtrl-fh1229) : 		if(u8BeepXms==0)
+CheckStateTriggleFlag in logic.c (OTL-PowerCtrl-fh1229) : 			u8BeepXms=255;						//filp-flop->2ms 150*2=300ms		
+ISR in main.c (OTL-PowerCtrl-fh1229) : 				if(u8BeepXms>0)
+ISR in main.c (OTL-PowerCtrl-fh1229) : 					u8BeepXms--;
+ISR in main.c (OTL-PowerCtrl-fh1229) : 					if(u8BeepXms==0)
