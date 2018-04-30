@@ -135,6 +135,14 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 		PBIF=0; 
 	}
 	
+	else if(LVDF)
+	{
+		LVDF=0;
+		
+	
+	
+	}
+	
 	else if(INTF)
 	{
 		INTF=0;	

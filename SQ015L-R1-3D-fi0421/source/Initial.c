@@ -73,10 +73,19 @@ void sysinitial(void)
     T0=100;           		// 8位, 溢出(向上,正向); 不可重载; 8M4T=2Mhz=2000Khz/128=16Khz
 
     asm(clrwdt);
+    
 
     //PCON:                 // WDTEN  EIS LVDF LVDSEL3 || LVDSEL2 LVDSEL1 LVDSEL0 LVDEN
-    PCON=0X00;              // WDTEN: 1=软件使能WDT
-    WDTEN=1;
+    PCON=0X12;				// LVD 检测电压3V             
+    
+    WDTEN=1;				// WDTEN: 1=软件使能WDT
+
+    
+	//LVDCON:  GP  GP  GP  GP :: GP  LVDM  LVDWP  LVDIE 
+	//LVDM：LVD 检测模式选择 
+	//0 = LVD 检测系统 VDD，但当 LVDSEL=0001 时，此位无效。 
+	//1 = LVD 检测 LVDI(PORTB3)端口 
+	LVDCON=0;	
 
     IOCB=0x08;              // PB3, 按键变化中断/唤醒
 

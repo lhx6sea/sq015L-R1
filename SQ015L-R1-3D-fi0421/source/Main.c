@@ -58,7 +58,12 @@ void main( void )
 		__asm__("clrwdt");   		//清看门狗
 		PORTB=0X09;	
 		bTask_10ms=0;	
-	}    	
+	}  
+	
+	
+	LVDIE=1;		//延时完成,使能低电压检测  	
+	LVDF=0;
+	LVDEN=1;
 		
 	while(1)
 	{
