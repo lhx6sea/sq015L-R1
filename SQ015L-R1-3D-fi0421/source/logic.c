@@ -59,7 +59,11 @@ void LogicalFlow(void)           	//run@1ms
     if( FanState == 0 )                     //关机
     {
         LED_close();
-        PWM0P = 0;
+        PWM0P =0;
+        PORTB2=0;
+        PWM0OE=1;
+        
+        PWMCK=0;
 
         if(bTask_step_100ms)                //延时关闭,风机; 让高压消失
         {
@@ -86,6 +90,7 @@ void LogicalFlow(void)           	//run@1ms
                 PWM0P++;
             }
         }
+		else	PWMCK=1;        
     }
 
     if( FanState == 2 )                     //风扇2档
@@ -127,6 +132,8 @@ void LogicalFlow(void)           	//run@1ms
                 PWM0P++;
             }
         }
+        else	PWMCK=1;
+        
     }
 
     /************************************************
@@ -247,6 +254,11 @@ void HandleKeyPress(void)              		//10ms
         if(FanState==0)         //开机,,开,移动电源
         {
             FanState=1;
+            
+            PWM0P =0;
+            PWM0OE=0;
+            
+            
 
             //bIP5305OnOffTrigger=1;          //200ms, 低电平
             //u8Pulse200ms=200;

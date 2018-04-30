@@ -64,28 +64,28 @@ void inital(void)
 
 void sysinitial(void)
 {
-    //OPTION:               // -  INTEDG  T0CS  T0SE :: PSA  PS2  PS1  PS0
-    OPTION=0X0F;            // Frq(timer0) 1/8   256/128/64/32/~/16/8/4/2/1(WDT,PSA=1)
-
-	//如果编译OPTION选择8M/2T，则Fosc=16M，Fsys=8M，Fcpu=4M。 
-    T0=0;                 	// 8位, 溢出(向上,正向)中断; 不可重载  2T,16Mhz
+    //OPTION:				// -  INTEDG  T0CS  T0SE :: PSA  PS2  PS1  PS0 
+    OPTION=0X06;            // Timer0clk/WDT  256|128/64/32//16//8/4/2|1(WDT,PSA=1)    
+							// T0CS=0; Ftmr0=Fcpu=8/4=2Mhz	
+	//T0CR寄存器:			// T0CK  -  -  - :: -  -  T1IE  T1IF 
+	T0CR=0;
+	
+    T0=100;           		// 8位, 溢出(向上,正向); 不可重载; 8M4T=2Mhz=2000Khz/128=16Khz
 
     asm(clrwdt);
 
     //PCON:                 // WDTEN  EIS LVDF LVDSEL3 || LVDSEL2 LVDSEL1 LVDSEL0 LVDEN
-    //PCON:                 // WDTEN  EIS    -      -  ::    -       -       -      -
     PCON=0X00;              // WDTEN: 1=软件使能WDT
     WDTEN=1;
 
     IOCB=0x08;              // PB3, 按键变化中断/唤醒
 
-    //INTECON(0x0E)         // GIE  -b6- -b5- -b4-  ::  -  INTE  PBIE  T0IE
+    //INTECON(0x0E)         // INTECON GIE -b6- -b5- -b4-  ::  -  INTE  PBIE  T0IE
     INTECON=0;
     
-    
+    T0IE=1;    
     INTE=0;
     INTEDG=0;
-    EIS=0;                  //WDTEN.7
+    EIS=0;                  // EIS=1; 使能 PORTB0 的 INT0 外部中断功能 
     PBIE=1;
-
 }

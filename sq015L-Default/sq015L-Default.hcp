@@ -1,0 +1,26 @@
+[HC-IDE]
+Version=3.0.2.0
+[File Count]
+Count=0
+[MCU]
+PowerSupply=2
+[Settings]
+Device=SQ015L
+ConfigBitValue0=14067
+ConfigBitValue1=15359
+ConfigBitValue2=14720
+ConfigBitValue3=240
+ConfigBitValue4=7
+Output=.
+PostBuild=0
+PostBuildCommand=
+[Files]
+OpenFileCounts=0
+[Break]
+Count=0
+[Watch0]
+Count=0
+[Watch1]
+Count=0
+[Watch2]
+Count=0

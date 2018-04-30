@@ -1,13 +1,13 @@
-/*  
-************************************************************************
-*					上海芯圣电子股份有限公司
-*						www.holychip.cn
-************************************************************************
-*	@Author				LiFei
-*	@File				Pwm.c
-*	@Library Version	V1.0.0.0
-*	@Date				2017.09.06
-************************************************************************
+/*
+****************************************************
+			中山凯鑫德电子股份有限公司
+				www.freeyes.net
+====================================================
+@名字     	inital.c
+@说明      	
+@作者		lhx6sea
+@日期		2018.04.29
+****************************************************
 */
 
 #include "include.h"
@@ -57,11 +57,11 @@ void t1_pwm_initial(void)
 	PWM1P = 0;			//PWM1P占空比寄存器 
 	PWM2P = 0;			//PWM2P占空比寄存器 
 	
-	//[PWMCON] PWM0OE PWM1OE PWM2OE PWMCK:::PWMMD PWMINV PWM1E PWM2E
+	//[PWMCON] PWM0OE PWM1OE PWM2OE PWMCK :: PWMMD PWMINV PWM1E PWM2E
 	//Bit [4]  PWMCK：T1 时钟倍频选择 
 	//0 = T1 时钟不倍频 
 	//1 = T1 时钟倍频(T1PR=000 时有效)，此控制位对所有所选 T1 时钟源有效		
-	PWMCON = 0x00;		//output PWM 
+	PWMCON = 0x00;		//允许PWM0，禁止PWM1，PWM2; T1时钟倍频
 	
 	//{T1CON}  T1EN  PWM0E  BUZE  T1CK1 || T1CK0  T1PR2  T1PR1  T1PR0 	
 	T1CON = 0xC8;		//Fpwm=Fsys=8Mhz  ??????????	
@@ -116,13 +116,18 @@ void pwm3_initial(void)
 ***********************************************************************/
 
 
+volatile BIT_BYTE_S         u8TimerFlag;      // 局部{位域}变量
+
+#define	bTask_10ms        	u8TimerFlag.b0
+
 //======================================================================
 //1ms 中断
 //----------------------------------------------------------------------
 void all_Interrupt_ISR_entry(void) __interrupt 0
-{
-    __asm__("clrwdt");
-    
+{    
+	//INTFLAG:	- - - - ::  -  INTF  PBIF  T0IF 
+	//T0CR:		- - - - ::  -    -   T1IE  T1IF 
+	//WDTEN  EIS [LVDF] LVDSEL3 || LVDSEL2 LVDSEL1 LVDSEL0 LVDEN
 	_nop();
 
 	if(PBIF)
@@ -134,16 +139,54 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 	{
 		INTF=0;	
 		
-		//PWM0OE=1; 		//禁止PWM0 输出
+		//PWM0OE=1; 			//禁止PWM0 输出
 		//FanState=0;	
 		//PWM0P = 0;
 	}
 	
-	else if(T0IF)
-	{
-	
+	else if(T0IF)				//10ms
+	{	
 		T0IF=0;
+		T0=100;					//(256-125);
+		
+		bTask_10ms=1;
+			
+		
+		TestIO_5=!TestIO_5;		//whil(1)=10ms	
+		
+		
+		/**************************************/			
+		if(++u8Step100ms>=10)	//约 100ms	
+		{
+			u8Step100ms=0;
+			bTask_step_100ms=1;	
+			
+		
+			/**************************************/
+			if(FanState==0)			//关机了吗?
+			{
+				if(++u8addto5s>99)	//关机,10s,休眠
+				{
+					_nop();
+					u8addto5s=111;	
+					_nop();
+				}		
+			}		
+			else
+			{
+				u8addto5s=0;
+			}
+			/**************************************/			
+					
+		}
+		
+		
+		
+		
+		
+				
 	}
+	
 	else
 	{
 		PBIF=0; 

@@ -1,12 +1,12 @@
-/*  
+/*
 ****************************************************
-			上海芯圣电子股份有限公司
-				www.holychip.cn
-****************************************************
-	@Author				LiFei
-	@File				delay.c
-	@Library Version	V1.0.0.0
-	@Date				2017.09.06
+			中山凯鑫德电子股份有限公司
+				www.freeyes.net
+====================================================
+@名字     	inital.c
+@说明      	
+@作者		lhx6sea
+@日期		2018.04.29
 ****************************************************
 */
 
@@ -32,28 +32,8 @@ void main( void )
 		
 	t1_pwm_initial();
 	pwm3_initial();	
+		
 	
-	TestIO_5=1;
-	
-	__asm__("clrwdt");          //清看门狗
-	PORTB=0X09;		
-	DelayXms(90);				// 上电延时
-	
-	__asm__("clrwdt");          //清看门狗
-	PORTB=0X09;
-	DelayXms(90);				// 上电延时
-	
-	__asm__("clrwdt");          //清看门狗
-	PORTB=0X09;
-	DelayXms(90);				// 上电延时
-	
-	__asm__("clrwdt");          //清看门狗
-	PORTB=0X09;
-	DelayXms(90);				// 上电延时
-	
-	__asm__("clrwdt");          //清看门狗
-	PORTB=0X09;
-
 	u8addto5s=0;				// 变量初始化
 	FanState=0;
 	u8addto5s=0;
@@ -64,52 +44,72 @@ void main( void )
 			
 	bOneClickTrigger=0;
 	bLongPressTrigger=0;	
-	DoubleHitCounter=3;			
+	DoubleHitCounter=3;	
 	
-	GIE=1; 	     	
+	u8Step100ms=0;
+	bTask_step_100ms=0;	
+	
+	TestIO_5=1;		
+	
+	GIE=1; 	
+	
+	while(!bTask_step_100ms) 		//上电延时 100ms
+	{	
+		__asm__("clrwdt");   		//清看门狗
+		PORTB=0X09;	
+		bTask_10ms=0;	
+	}    	
 		
 	while(1)
 	{
 		
+		/*
 		if(FanState)
 		TestIO_5=!TestIO_5;			//whil(1)=10ms
 		else
 		TestIO_5=0;
+		*/
 		
 		__asm__("clrwdt");          //清看门狗
-		_nop();
-		DelayXms(15);
-		_nop();
-		KeyScanPer10ms();
-		_nop();
-		DelayXms(15);
-		_nop();
-		LogicalFlow();
-		_nop();		
-		DelayXms(15);
-		_nop();
-		HandleKeyPress();
-		_nop();	
-		_nop();
 		
-		/**************************************/			
-		if(++u8Step100ms>9)			//约 270ms	
+		
+		if(bTask_10ms)
 		{
-			u8Step100ms=0;
-			bTask_step_100ms=1;			
-		}
+			bTask_10ms=0;
+					
+			//DelayXms(15);
+			_nop();
+			LogicalFlow();
+			_nop();		
+			//DelayXms(15);
+			_nop();
+			HandleKeyPress();
+			_nop();	
+			_nop();
+			
+			_nop();
+			//DelayXms(15);
+			_nop();
+			KeyScanPer10ms();
+			_nop();			
 		
+		}	
 		
 		if(!_pOverVoltage)			//过压后,停止PWM输出; 并从0开始增加
 		{
-			PWM0OE=1;       		//"1":PWMout禁止
+			
 			bTask_step_100ms=0;
 			u8Step100ms=0;
+			
+			PWM0OE=1;       		//"1":PWMout禁止
 			PWM0P=0;
+			PORTB2=0;
+			PWMCK=0;
+        			
 		}		
 		
 		/**************************************/
-		if(u8addto5s>=252)
+		if(u8addto5s>=111)
 		{
 			WDTEN=0;
 			__asm__("clrwdt");          //清看门狗
@@ -129,26 +129,10 @@ void main( void )
 			__asm__("clrwdt");          //清看门狗			
 					
 		}
-		
-		/**************************************/
-		if(FanState==0)					//关机,才,休眠!
-		{
-			if(++u8addto5s>=252)
-			{
-				_nop();
-				u8addto5s=253;	
-				_nop();
-			}		
-		}		
-		else
-		{
-			u8addto5s=0;
-		}
-		/**************************************/		
-		
+				
 	}//>{while(1)}
 	
 }//>{main}
-//**********************************************************************
-//^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v^v
+
+//{}
 //*/
