@@ -117,7 +117,7 @@ void main( void )
 		if(u8addto5s>=111)
 		{
 			WDTEN=0;
-			__asm__("clrwdt");          //清看门狗
+			__asm__("clrwdt");		//清看门狗
 			u8addto5s=0;
 			_nop();
 			_nop();
@@ -129,9 +129,9 @@ void main( void )
 			_nop();
 			_nop();
 			_nop();
-			__asm__("clrwdt");          //清看门狗
+			__asm__("clrwdt");		//清看门狗
 			WDTEN=1;
-			__asm__("clrwdt");          //清看门狗			
+			__asm__("clrwdt");		//清看门狗			
 					
 		}
 				

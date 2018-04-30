@@ -186,12 +186,7 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 			}
 			/**************************************/			
 					
-		}
-		
-		
-		
-		
-		
+		}		
 				
 	}
 	
