@@ -49,7 +49,9 @@ void main( void )
 	u8Step100ms=0;
 	bTask_step_100ms=0;	
 	
-	TestIO_5=1;		
+	TestIO_5=1;	
+	
+	u8TimerFlag.byte=0;	
 	
 	GIE=1; 	
 	

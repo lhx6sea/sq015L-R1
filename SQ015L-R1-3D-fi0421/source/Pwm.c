@@ -116,9 +116,18 @@ void pwm3_initial(void)
 ***********************************************************************/
 
 
-volatile BIT_BYTE_S         u8TimerFlag;      // 局部{位域}变量
+volatile BIT_BYTE_U         u8TimerFlag;      // 局部{位域}变量
 
-#define	bTask_10ms        	u8TimerFlag.b0
+#define	bTask_10ms        	u8TimerFlag.bits.b0
+#define	bVoltageDropto3V	u8TimerFlag.bits.b1
+#define	bLowVoltageState	u8TimerFlag.bits.b2
+
+#define	bVoltageUpto_3_5	u8TimerFlag.bits.b3
+#define	bVoltageUpto_3_7	u8TimerFlag.bits.b4
+#define	bVoltageUpto_4_1	u8TimerFlag.bits.b5
+#define	bVoltageUpto_4_3	u8TimerFlag.bits.b6
+
+
 
 //======================================================================
 //1ms 中断
@@ -139,8 +148,22 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 	{
 		LVDF=0;
 		
-	
-	
+		u8addto5s=0;
+		
+		SCS=1;					//低电压,降频工作
+		OPTION=0;
+		
+		u8Step100ms=0;
+		bTask_step_100ms=0;	
+		
+		bVoltageDropto3V=1;
+		bLowVoltageState=1;	
+		
+		bVoltageUpto_3_5=0;	
+		bVoltageUpto_3_7=0;	
+		bVoltageUpto_4_1=0;	
+		bVoltageUpto_4_3=0;	
+		
 	}
 	
 	else if(INTF)
@@ -158,16 +181,64 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 		T0=100;					//(256-125);
 		
 		bTask_10ms=1;
+		
+		if(bVoltageUpto_3_5)	//50ms, 恢复一次电压
+		{
+			bVoltageUpto_3_5=0;	//upto to 3.7V
+			LVDF=0;
+			PCON= ((PCON&0xE1)|LVD_3_7V);			
+			bVoltageUpto_3_7=1;					
+		}
+		
+		if(bVoltageUpto_3_7)	//50ms, 恢复一次电压
+		{
+			bVoltageUpto_3_7=0;	//upto to 4.1V
+			LVDF=0;
+			PCON= ((PCON&0xE1)|LVD_4_1V);			
+			bVoltageUpto_4_1=1;					
+		}
+		
+		if(bVoltageUpto_4_1)	//50ms, 恢复一次电压
+		{
+			bVoltageUpto_4_1=0;	//upto to 4.3V
+			LVDF=0;
+			PCON= ((PCON&0xE1)|LVD_4_3V);			
+			bVoltageUpto_4_3=1;					
+		}
+		
+		
+		if(bVoltageUpto_4_3)	//最后,恢复,高频工作模式
+		{
+			bVoltageUpto_4_3=0;	//upto to 4.3V
+			LVDF=0;
+			PCON= ((PCON&0xE1)|LVD_3_0V);
+						
+			bLowVoltageState=0;	
+			SCS=0;
+			OPTION=6;				
+		}						
 			
 		
 		TestIO_5=!TestIO_5;		//whil(1)=10ms	
 		
 		
-		/**************************************/			
-		if(++u8Step100ms>=10)	//约 100ms	
+		/********************************************/			
+		if(++u8Step100ms>=10)	//约 100ms; 低频 500ms	
 		{
 			u8Step100ms=0;
 			bTask_step_100ms=1;	
+			
+			if(bVoltageDropto3V)
+			{
+				bVoltageDropto3V=0;		//500ms,后,尝试恢复
+				LVDF=0;
+				PCON= ((PCON&0xE1)|LVD_3_5V);
+				
+				bVoltageUpto_3_5=1;
+			
+			}
+			
+			
 			
 		
 			/**************************************/
@@ -198,3 +269,6 @@ void all_Interrupt_ISR_entry(void) __interrupt 0
 	}
 	
 }
+
+//{}
+//*/

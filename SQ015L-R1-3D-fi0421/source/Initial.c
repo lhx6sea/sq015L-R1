@@ -38,21 +38,21 @@
 
 void inital(void)
 {
-    						//PB3 输入, PB0 中断, 输入上拉
-    PORTB=0X09;             //端口寄存器初始值		输入,置高; 输出,置零
-    TRISB=0X09;             //输入 or 输出设置    	1=输入in,  0=输出out
+    						// PB3 输入, PB0 中断, 输入上拉
+    PORTB=0X09;             // 端口寄存器初始值		输入,置高; 输出,置零
+    TRISB=0X09;             // 输入 or 输出设置    	1=输入in,  0=输出out
     
     
     //ODCON(0x0C):          // -  - ODB5  ODB4 :: ODB3  ODB2  ODB1  ODB0
-    ODCON =0X09;            //开漏设置      0=推挽  ; 1=开漏
+    ODCON =0X09;            // 开漏设置      0=推挽  ; 1=开漏
         
 
-    //PDCON(0x0B):          //GPR  /PDB2  /PDB1  /PDB0 :: -  -  -  -
-    PDCON =0X09;            //下拉设置      0=enable;   1=Disabled
+    //PDCON(0x0B):          // GPR  /PDB2  /PDB1  /PDB0 :: -  -  -  -
+    PDCON =0X09;            // 下拉设置      0=enable;   1=Disabled
     
     
     //PHCON(0x0D):          // - /PHB3 /PHB5 /PHB4 :: - /PHB2 /PHB1 /PHB0
-    PHCON =0XF6;            //上拉设置      0=enable;   1=Disabled    
+    PHCON =0XF6;            // 上拉设置      0=enable;   1=Disabled    
 }
 
 
@@ -65,29 +65,51 @@ void inital(void)
 void sysinitial(void)
 {
     //OPTION:				// -  INTEDG  T0CS  T0SE :: PSA  PS2  PS1  PS0 
-    OPTION=0X06;            // Timer0clk/WDT  256|128/64/32//16//8/4/2|1(WDT,PSA=1)    
+    OPTION=0x06;            // Timer0clk/WDT  256|128/64/32//16//8/4/2|1(WDT,PSA=1)    
 							// T0CS=0; Ftmr0=Fcpu=8/4=2Mhz	
 	//T0CR寄存器:			// T0CK  -  -  - :: -  -  T1IE  T1IF 
 	T0CR=0;
 	
-    T0=100;           		// 8位, 溢出(向上,正向); 不可重载; 8M4T=2Mhz=2000Khz/128=16Khz
+    T0=100;           		// 8位, 溢出(向上,正向); 不可重载
+    						// 8M4T=2Mhz=2000Khz/128=16Khz
 
     asm(clrwdt);
     
-
     //PCON:                 // WDTEN  EIS LVDF LVDSEL3 || LVDSEL2 LVDSEL1 LVDSEL0 LVDEN
-    PCON=0X12;				// LVD 检测电压3V             
+    PCON=0x12;				// LVD 检测电压3V  
+	/***********************   
+	1001 = 3.0V 
+	1010 = 3.2V 
+	1011 = 3.4V 
+	1100 = 3.5V 
+	1101 = 3.7V 
+	1110 = 4.1V 
+	1111 = 4.3V 
+	//*/            
     
     WDTEN=1;				// WDTEN: 1=软件使能WDT
 
     
 	//LVDCON:  GP  GP  GP  GP :: GP  LVDM  LVDWP  LVDIE 
+	
 	//LVDM：LVD 检测模式选择 
 	//0 = LVD 检测系统 VDD，但当 LVDSEL=0001 时，此位无效。 
 	//1 = LVD 检测 LVDI(PORTB3)端口 
-	LVDCON=0;	
+	
+	//Bit [1]    LVDWP：休眠模式下 LVD 使能位 
+	//0 =  休眠模式下，LVD 唤醒关闭，即使 LVDEN=1，LVD 中断也不能唤醒系统休眠
+	//1 =  休眠模式下，LVD 唤醒使能，LVD 中断可唤醒休眠。唤醒后系统先进入中断 	
+	LVDCON=0x04;	
 
     IOCB=0x08;              // PB3, 按键变化中断/唤醒
+    
+    
+    //OSCCON:  T0OSCEN  -  -  - :: -  -  HXEN  SCS 
+    //T0OSCEN=1,在低频或绿色模式下使能低频振荡器（包括内部低频RC、外部低频晶振） 
+    //HXEN=1, 	在低频或绿色模式下使能高频振荡器 
+    //SCS=1,	系统时钟选择为低频系统时钟 
+    OSCCON=0;
+    
 
     //INTECON(0x0E)         // INTECON GIE -b6- -b5- -b4-  ::  -  INTE  PBIE  T0IE
     INTECON=0;

@@ -13,8 +13,8 @@ typedef signed long     s32;
 
 //typedef bool bit;           	//*|5.少用 bool 变量                
 
-//***************************************************
-typedef	struct strTypeName
+/**************************************************/
+typedef	struct strTypeName1
 {
 	unsigned	b0:1;
 	unsigned 	b1:1;
@@ -26,13 +26,13 @@ typedef	struct strTypeName
 	unsigned 	b7:1;
 
 }	BIT_BYTE_S; 				//位域结构体类型别名
-/***************************************************/
+/**************************************************/
 
 
-/***************************************************
+/**************************************************/
 typedef union  unionTypeName
 {
-	struct	strTypeName
+	struct	strTypeName2
 	{
 		unsigned	b0:1;
 		unsigned 	b1:1;
@@ -48,6 +48,6 @@ typedef union  unionTypeName
 	u8 byte; 
     
 }	BIT_BYTE_U;
-***************************************************/
+/**************************************************/
 
 #endif

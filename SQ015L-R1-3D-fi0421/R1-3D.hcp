@@ -1,7 +1,7 @@
 [HC-IDE]
 Version=3.0.2.0
 [File Count]
-Count=14
+Count=13
 [MCU]
 PowerSupply=2
 [Settings]
@@ -38,17 +38,17 @@ Count=0
 [Project Files]
 File0=source\board.h
 File1=source\data.h
-File2=source\Delay.h
-File3=source\Include.h
-File4=source\Initial.c
-File5=source\Initial.h
-File6=source\key.c
-File7=source\logic.c
-File8=source\Main.c
-File9=source\Pwm.c
-File10=source\Pwm.h
-File11=source\SQ015L.h
-File12=source\type_def.h
+File2=source\Include.h
+File3=source\Initial.c
+File4=source\Initial.h
+File5=source\key.c
+File6=source\logic.c
+File7=source\Main.c
+File8=source\Pwm.c
+File9=source\Pwm.h
+File10=source\SQ015L.h
+File11=source\type_def.h
+File12=source\typedef.h
 File13=source\typedef.h
 File14=source\typedef.h
 File15=source\typedef.h

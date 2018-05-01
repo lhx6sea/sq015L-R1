@@ -231,4 +231,5 @@ void key_scay(void)
     }
     else key_state = 0;
 }
+//{}
 //*/

@@ -100,7 +100,7 @@ void LogicalFlow(void)           	//run@1ms
 
         if(bTask_step_100ms)
         {
-            PWM0OE=0;       //"0":PWM输出     //fi0331
+            PWM0OE=0;		//"0":PWM输出 	//fi0331
         }
 
         if(PWM0P < DutyTable[FanState])
@@ -121,7 +121,7 @@ void LogicalFlow(void)           	//run@1ms
 
         if(bTask_step_100ms)
         {
-            PWM0OE=0;       //"0":PWM输出     //fi0331
+            PWM0OE=0;       //"0":PWM输出	//fi0331
         }
 
         if(PWM0P < DutyTable[FanState])
@@ -144,7 +144,7 @@ void LogicalFlow(void)           	//run@1ms
 
         if(bTask_step_100ms)
         {
-            PWM0OE=0;       //"0":PWM输出     //fi0331
+            PWM0OE=0;       //"0":PWM输出	//fi0331
         }
 
         if(PWM0P < DutyTable[FanState])
@@ -298,3 +298,6 @@ void HandleKeyPress(void)              		//10ms
     ***************************************************************/
 
 }//>{HandleKeyPress}
+
+//{}
+//*/
