@@ -15,22 +15,26 @@ Output=.
 PostBuild=0
 PostBuildCommand=
 [Files]
-OpenFileCounts=11
-File0=source\Delay.c|3 78 1324 78 556
-File1=source\Initial.c|1 182 1428 182 660
-File2=source\Pwm.c|1 0 1242 0 474
-File3=source\Main.c|1 104 1350 104 582
-File4=source\key.c|1 26 1272 26 504
-File5=source\logic.c|1 52 1298 52 530
-File6=source\data.h|1 130 1376 130 608
-File7=source\board.h|1 208 1454 208 686
-File8=source\Initial.h|1 78 1376 78 461
-File9=source\Include.h|1 52 1350 52 435
-File10=source\Delay.h|1 156 1402 156 598
+OpenFileCounts=13
+File0=source\Main.c|3 128 1386 128 591
+File1=source\Pwm.c|1 160 1358 160 627
+File2=source\Initial.c|1 0 752 0 467
+File3=source\board.h|1 32 784 32 499
+File4=source\type_def.h|1 160 1422 160 627
+File5=source\typedef.h|1 128 1061 128 549
+File6=source\SQ015L.h|1 128 1390 128 595
+File7=source\Pwm.h|1 96 1358 96 563
+File8=source\Initial.h|1 64 1326 64 531
+File9=source\Include.h|1 32 1294 32 499
+File10=source\data.h|1 64 1262 64 485
+File11=source\logic.c|1 160 1358 160 581
+File12=source\key.c|1 96 1294 96 517
 [Break]
 Count=0
 [Watch0]
-Count=0
+Count=2
+Watch0=FanState 0
+Watch1=u8addto5s 0
 [Watch1]
 Count=0
 [Watch2]
